@@ -921,7 +921,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.20.13", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
   version "7.23.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
   integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
@@ -1237,6 +1237,16 @@ debug@^4.1.0, debug@^4.1.1:
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
   dependencies:
     ms "2.1.2"
+
+dexie@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.2.4.tgz#b22a9729be1102acb2eee16102ea6e2bc76454cf"
+  integrity sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==
+
+diff@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-5.1.0.tgz#bc52d298c5ea8df9194800224445ed43ffc87e40"
+  integrity sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==
 
 electron-to-chromium@^1.4.535:
   version "1.4.568"
@@ -1683,6 +1693,81 @@ supports-preserve-symlinks-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
+
+tn-capitalize@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/tn-capitalize/-/tn-capitalize-1.1.3.tgz#a75195dde03af6f052e893338dcde914a2f4b1e5"
+  integrity sha512-CK9/5Gxowm5zOJ4+Ma+nAukRNUmHumNIHAZaFLTDazZvt48/T5t/RRllZk3ewREIi4OBF948/NKacyet1AaZ6g==
+  dependencies:
+    "@babel/runtime" "^7.10.4"
+
+tn-case@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/tn-case/-/tn-case-3.0.1.tgz#ad0541b3dd0860377e28102ac4604027dbc51bcb"
+  integrity sha512-6Ymsq7PT1OveFwDbXtL1Yt02ypsZUTd2YIBHYIl7HNBUeTO0qO9VCQQKenPeoUjb840g1S4AA6ZRAjIhn/yXDQ==
+  dependencies:
+    "@babel/runtime" "^7.10.4"
+    tn-capitalize "^1.1.3"
+
+tn-cloneobj@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tn-cloneobj/-/tn-cloneobj-2.0.0.tgz#6725e552418dca1c3fd1d2fa7db7b568309ca9f4"
+  integrity sha512-cVtjZMC80h9GE/DprVPO3GC5FvwrV0v36wyiUwzxPjEp4rbhCP7CZAGUm6BSRLpaG7DoHGYiKI+qw3sKyWh+Qg==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    tn-consoler "^2.2.0"
+    tn-validate "^4.0.0"
+
+tn-consoler@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tn-consoler/-/tn-consoler-2.2.0.tgz#04e782fa75cc7831347ab20fed7ee3c9205ec36f"
+  integrity sha512-4yPKsRmBrkk6V4rI5OpTPqa1vMMxMOuWPk5Jq/bV/guN7CFfWDfKe9QU427hm/3Cf5w8n/+3qTXRmaXKwWzHuA==
+  dependencies:
+    "@babel/runtime" "^7.10.4"
+    tn-case "^3.0.1"
+
+tn-deepobj@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/tn-deepobj/-/tn-deepobj-2.2.0.tgz#51d4ab00a9131f50bb68ca6b6c83b4d2b19f824c"
+  integrity sha512-Ud2EgFxysf40R32EwVsGSwG0WhHLTMJJ+3Ncd1O9Qlq9mUoNBYLEb+yYJAERJ7967pNzIty8374MpbV/iZuviQ==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
+    tn-consoler "^2.2.0"
+    tn-mergeobj "^2.0.0"
+    tn-validate "^4.0.0"
+
+tn-diff@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.0.0.tgz#a4a22b1b315c0974ef697e572ddbf4e3a1e47363"
+  integrity sha512-WKMVB5Bry/GwfV9olW1pIWsEtcJ9dloumX8zBZ+QuAGyCqGMYT8ICYqZR2lL5jXgu1j54QC4VzOFYcHRakFoMg==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
+    diff "^5.1.0"
+    tn-cloneobj "^2.0.0"
+    tn-deepobj "^2.2.0"
+    tn-typescript "^2.1.1"
+    tn-validate "^4.0.0"
+
+tn-mergeobj@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tn-mergeobj/-/tn-mergeobj-2.0.0.tgz#7b9a0c5147dd9c7bd95ca53b4f7f4ae0be3084c2"
+  integrity sha512-iR8oCofMEUQbJA5MqDWwpgv3SOlNFkEdnnvOSwZaHBCU0+Ftu299DV5EOWXhos5+yxNAaOd8qeP7+hZhc/hoJg==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    tn-validate "^4.0.0"
+
+tn-typescript@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tn-typescript/-/tn-typescript-2.1.1.tgz#f65dabe03f98ee8986fcc32ea77bd45a53ee13f8"
+  integrity sha512-CeBuSda9wRGHexNS1dUgaczPW9fFVFdLND2s5PXxZ82kvIbjEbIaQD5yWvf7wPcrgFUCUqpQP90IJ/tpcejXlQ==
+
+tn-validate@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/tn-validate/-/tn-validate-4.0.0.tgz#861a50d8e96f83752c714caab07d03d3cf784f53"
+  integrity sha512-AJL2JCg25XnyKRb8qNfUMBWNxxN9g75SdGM0v1IdXPGCz+c60whbgy1Opw/i0ZrzZ1lzoFLzLRHEmotT9OZdgA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    tn-consoler "^2.2.0"
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

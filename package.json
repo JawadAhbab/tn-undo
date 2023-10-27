@@ -14,7 +14,9 @@
   "author": "Turnova",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "^7.23.2"
+    "@babel/runtime": "^7.23.2",
+    "dexie": "^3.2.4",
+    "tn-diff": "^1.0.0"
   },
   "peerDependencies": {},
   "devDependencies": {
