@@ -921,7 +921,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.20.13", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.13", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
   version "7.23.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
   integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
@@ -1498,6 +1498,11 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
+nanoid@^3.3.4:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.6.tgz#443380c856d6e9f9824267d960b4236ad583ea4c"
+  integrity sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==
+
 node-releases@^2.0.13:
   version "2.0.13"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.13.tgz#d5ed1627c23e3461e819b02e57b75e4899b1c81d"
@@ -1736,10 +1741,10 @@ tn-deepobj@^2.2.0:
     tn-mergeobj "^2.0.0"
     tn-validate "^4.0.0"
 
-tn-diff@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.0.0.tgz#a4a22b1b315c0974ef697e572ddbf4e3a1e47363"
-  integrity sha512-WKMVB5Bry/GwfV9olW1pIWsEtcJ9dloumX8zBZ+QuAGyCqGMYT8ICYqZR2lL5jXgu1j54QC4VzOFYcHRakFoMg==
+tn-diff@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.0.2.tgz#038aa21fa07cb368f68f5b11bd5b9aa4c81a71bf"
+  integrity sha512-o8h3TejPqr420ySUPwz1Bgmj2UFWEbVetTDX5lJ5qS7RVcX46UfV8L1Wetc45GUY3PbROQ/PoqGaNj4elCGT8Q==
   dependencies:
     "@babel/runtime" "^7.23.2"
     diff "^5.1.0"
@@ -1760,6 +1765,14 @@ tn-typescript@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/tn-typescript/-/tn-typescript-2.1.1.tgz#f65dabe03f98ee8986fcc32ea77bd45a53ee13f8"
   integrity sha512-CeBuSda9wRGHexNS1dUgaczPW9fFVFdLND2s5PXxZ82kvIbjEbIaQD5yWvf7wPcrgFUCUqpQP90IJ/tpcejXlQ==
+
+tn-uniqid@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/tn-uniqid/-/tn-uniqid-1.0.1.tgz#f4ee4acf8f0214eab6b71d181a9a953ccf86bf90"
+  integrity sha512-oEuwg+rSbrME9pMFqc+xZ3ueXlsakwDoh/ES5lZdzwgzHLhJFbemfsTHOhPpkLWLgg4LjJrlUTAarc85jBUOeQ==
+  dependencies:
+    "@babel/runtime" "^7.20.0"
+    nanoid "^3.3.4"
 
 tn-validate@^4.0.0:
   version "4.0.0"
