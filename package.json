@@ -1,0 +1,30 @@
+{
+  "name": "tn-undo",
+  "version": "1.0.0",
+  "description": " ",
+  "keywords": [],
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/types/src/index.d.ts",
+  "scripts": {
+    "Serve": "parcel .dev/parcel/index.html --dist-dir .dev/parcel/dist --cache-dir .dev/parcel/cache --open",
+    "Build": "rimraf dist && rollup -c",
+    "Publish": "rimraf .dev/parcel/dist & rimraf .dev/parcel/cache && yarn run Build && yarn publish"
+  },
+  "author": "Turnova",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.23.2"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/plugin-transform-runtime": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@rollup/plugin-babel": "^6.0.4",
+    "rollup": "^4.1.4",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.2.2"
+  }
+}
