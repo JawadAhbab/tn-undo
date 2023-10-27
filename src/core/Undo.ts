@@ -17,18 +17,20 @@ export class Undo {
     this.db = new Dexie(dbname)
   }
 
-  private createTable(namespace: string, initvalue: any) {
+  private async createTable(namespace: string, initvalue: any) {
     this.namespaces[namespace] = { serial: 0, lastvalue: initvalue }
+    this.db.close()
     this.db.version(++this.version).stores({ [namespace]: 'serial' })
+    await this.db.open()
   }
 
   private table(namespace: string): Dexie.Table<UndoStack, string> {
     return (this.db as any)[namespace]
   }
 
-  public update(namespace: string, value: any) {
+  public async update(namespace: string, value: any) {
     const ns = this.namespaces[namespace]
-    if (!ns) return this.createTable(namespace, value)
+    if (!ns) return await this.createTable(namespace, value)
     this.table(namespace).put({ serial: ++ns.serial, diff: diff(ns.lastvalue, value) })
     ns.lastvalue = value
   }
