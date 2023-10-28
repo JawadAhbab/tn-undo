@@ -5,7 +5,6 @@
 
 /.dev/parcel/cache
 /.dev/parcel/dist
-/dist
 
 # testing
 /coverage
