@@ -34,7 +34,8 @@ export class Undo {
     const diff = getDiff(ns.lastvalue, value)
     if (diff[0] === DiffKind.IDENTICAL) return
 
-    // ARGENT drop next serials
+    const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys()
+    this.table(namespace).bulkDelete(remkeys as any)
 
     const laststack = await this.table(namespace).get(ns.serial as any)
     if (laststack) {
