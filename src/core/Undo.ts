@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import { Diff, DiffKind, diff as getDiff, mergeable, undo } from 'tn-diff'
+import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
@@ -57,5 +57,16 @@ export class Undo {
     ns.serial -= 1
     ns.lastvalue = undovalue
     return undovalue
+  }
+
+  public async redo(namespace: string) {
+    const ns = this.namespaces[namespace]
+    if (!ns) return undefined
+    const nextstack = await this.table(namespace).get((ns.serial + 1) as any)
+    if (!nextstack) return ns.lastvalue
+    const redovalue = redo(ns.lastvalue, nextstack.diff)
+    ns.serial += 1
+    ns.lastvalue = redovalue
+    return redovalue
   }
 }
