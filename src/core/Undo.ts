@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import { Diff, DiffKind, diff as getDiff } from 'tn-diff'
+import { Diff, DiffKind, diff as getDiff, mergeable } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
@@ -34,7 +34,17 @@ export class Undo {
     const diff = getDiff(ns.lastvalue, value)
     if (diff[0] === DiffKind.IDENTICAL) return
 
-    this.table(namespace).put({ serial: ++ns.serial, diff })
-    ns.lastvalue = value
+    // ARGENT drop next serials
+
+    const laststack = await this.table(namespace).get(ns.serial as any)
+    if (laststack) {
+      const merge = mergeable(1, value, laststack.diff, diff)
+      if (merge.merged) await this.table(namespace).update(laststack, { diff: merge.diff })
+      else await this.table(namespace).put({ serial: ++ns.serial, diff })
+      ns.lastvalue = value
+    } else {
+      await this.table(namespace).put({ serial: ++ns.serial, diff })
+      ns.lastvalue = value
+    }
   }
 }
