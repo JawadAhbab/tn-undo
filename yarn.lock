@@ -1741,10 +1741,10 @@ tn-deepobj@^2.2.0:
     tn-mergeobj "^2.0.0"
     tn-validate "^4.0.0"
 
-tn-diff@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.0.2.tgz#038aa21fa07cb368f68f5b11bd5b9aa4c81a71bf"
-  integrity sha512-o8h3TejPqr420ySUPwz1Bgmj2UFWEbVetTDX5lJ5qS7RVcX46UfV8L1Wetc45GUY3PbROQ/PoqGaNj4elCGT8Q==
+tn-diff@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.1.1.tgz#c4eb230bde1b05ce8883e8bda7c21f5ff610add5"
+  integrity sha512-Dk73odSqdrc1It7SzfBRqp//HfR37XT/lEmG6hIiFWancYzUwzLEVVEyepcwcimvnpKHATEtBhHwcYvJjZ/hzA==
   dependencies:
     "@babel/runtime" "^7.23.2"
     diff "^5.1.0"

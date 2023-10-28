@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/runtime": "^7.23.2",
     "dexie": "^3.2.4",
-    "tn-diff": "1.0.2",
+    "tn-diff": "^1.1.1",
     "tn-typescript": "^2.1.1",
     "tn-uniqid": "^1.0.1"
   },
