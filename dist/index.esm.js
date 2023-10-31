@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import { cloneobj } from 'tn-cloneobj';
 import { diff, DiffKind, mergeable, undo, redo } from 'tn-diff';
 class Undo {
   db;
@@ -26,29 +27,30 @@ class Undo {
   table(namespace) {
     return this.db[namespace];
   }
-  async update(namespace, value) {
+  async update(namespace, curr) {
+    const currval = cloneobj(curr, true, false);
     const ns = this.namespaces[namespace];
-    if (!ns) return await this.createTable(namespace, value);
-    const diff$1 = diff(ns.lastvalue, value);
+    if (!ns) return await this.createTable(namespace, currval);
+    const diff$1 = diff(ns.lastvalue, currval);
     if (diff$1[0] === DiffKind.IDENTICAL) return;
     const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys();
     this.table(namespace).bulkDelete(remkeys);
     const laststack = await this.table(namespace).get(ns.serial);
     if (laststack) {
-      const merge = mergeable(1, value, laststack.diff, diff$1);
+      const merge = mergeable(1, currval, laststack.diff, diff$1);
       if (merge.merged) await this.table(namespace).update(laststack, {
         diff: merge.diff
       });else await this.table(namespace).put({
         serial: ++ns.serial,
         diff: diff$1
       });
-      ns.lastvalue = value;
+      ns.lastvalue = currval;
     } else {
       await this.table(namespace).put({
         serial: ++ns.serial,
         diff: diff$1
       });
-      ns.lastvalue = value;
+      ns.lastvalue = currval;
     }
   }
   async undo(namespace) {

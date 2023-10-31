@@ -1,6 +1,7 @@
 'use strict';
 
 var Dexie = require('dexie');
+var tnCloneobj = require('tn-cloneobj');
 var tnDiff = require('tn-diff');
 class Undo {
   db;
@@ -28,29 +29,30 @@ class Undo {
   table(namespace) {
     return this.db[namespace];
   }
-  async update(namespace, value) {
+  async update(namespace, curr) {
+    const currval = tnCloneobj.cloneobj(curr, true, false);
     const ns = this.namespaces[namespace];
-    if (!ns) return await this.createTable(namespace, value);
-    const diff = tnDiff.diff(ns.lastvalue, value);
+    if (!ns) return await this.createTable(namespace, currval);
+    const diff = tnDiff.diff(ns.lastvalue, currval);
     if (diff[0] === tnDiff.DiffKind.IDENTICAL) return;
     const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys();
     this.table(namespace).bulkDelete(remkeys);
     const laststack = await this.table(namespace).get(ns.serial);
     if (laststack) {
-      const merge = tnDiff.mergeable(1, value, laststack.diff, diff);
+      const merge = tnDiff.mergeable(1, currval, laststack.diff, diff);
       if (merge.merged) await this.table(namespace).update(laststack, {
         diff: merge.diff
       });else await this.table(namespace).put({
         serial: ++ns.serial,
         diff
       });
-      ns.lastvalue = value;
+      ns.lastvalue = currval;
     } else {
       await this.table(namespace).put({
         serial: ++ns.serial,
         diff
       });
-      ns.lastvalue = value;
+      ns.lastvalue = currval;
     }
   }
   async undo(namespace) {
