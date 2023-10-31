@@ -1084,6 +1084,11 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.1.5.tgz#121eb95664a46afbc58d4fe2226b9dd9f8dcc59b"
   integrity sha512-FQ5qYqRJ2vUBSom3Fos8o/6UvAMOvlus4+HGCAifH1TagbbwVnVVe0o01J1V52EWnQ8kmfpJDJ0FMrfM5yzcSA==
 
+"@types/diff@^5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-5.0.7.tgz#471bad8be0d911ed04d115863402920f3a84079c"
+  integrity sha512-adBosR2GntaQQiuHnfRN9HtxYpoHHJBcdyz7VSXhjpSAmtvIfu/S1fjTqwuIx/Ypba6LCZdfWIqPYx2BR5TneQ==
+
 "@types/estree@^1.0.0":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.3.tgz#2be19e759a3dd18c79f9f436bd7363556c1a73dd"
@@ -1736,12 +1741,13 @@ tn-deepobj@^2.2.0:
     tn-mergeobj "^2.0.0"
     tn-validate "^4.0.0"
 
-tn-diff@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.2.0.tgz#7d6a9604871173cf85c00a237c927fab01bb074e"
-  integrity sha512-yxO7iW4ONeBjS1OMwv3Qa1bKR21evAtPyzrHzj59C6KI04pZBKfrrCG9Nx8Z0YJHxjHj8gC1GbGD8XEhKh1uNg==
+tn-diff@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/tn-diff/-/tn-diff-1.2.1.tgz#1a6f838e47175f97703d0b46b4004423761933ab"
+  integrity sha512-68CDPY7y/rlYCAAvNIREVcMaQqXtWgEyHWMPcPNn08FO2IK/1JsUgai8O/zBAZryH2p8HqstDPite9XeoCGiPQ==
   dependencies:
     "@babel/runtime" "^7.23.2"
+    "@types/diff" "^5.0.7"
     diff "^5.1.0"
     tn-cloneobj "^2.0.0"
     tn-deepobj "^2.2.0"
