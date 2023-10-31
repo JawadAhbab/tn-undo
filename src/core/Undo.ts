@@ -1,4 +1,5 @@
 import Dexie from 'dexie'
+import { cloneobj } from 'tn-cloneobj'
 import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
@@ -28,10 +29,11 @@ export class Undo {
     return (this.db as any)[namespace]
   }
 
-  public async update(namespace: string, value: any) {
+  public async update(namespace: string, curr: any) {
+    const currval = cloneobj(curr, true, false)
     const ns = this.namespaces[namespace]
-    if (!ns) return await this.createTable(namespace, value)
-    const diff = getDiff(ns.lastvalue, value)
+    if (!ns) return await this.createTable(namespace, currval)
+    const diff = getDiff(ns.lastvalue, currval)
     if (diff[0] === DiffKind.IDENTICAL) return
 
     const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys()
@@ -39,13 +41,13 @@ export class Undo {
 
     const laststack = await this.table(namespace).get(ns.serial as any)
     if (laststack) {
-      const merge = mergeable(1, value, laststack.diff, diff)
+      const merge = mergeable(1, currval, laststack.diff, diff)
       if (merge.merged) await this.table(namespace).update(laststack, { diff: merge.diff })
       else await this.table(namespace).put({ serial: ++ns.serial, diff })
-      ns.lastvalue = value
+      ns.lastvalue = currval
     } else {
       await this.table(namespace).put({ serial: ++ns.serial, diff })
-      ns.lastvalue = value
+      ns.lastvalue = currval
     }
   }
 
