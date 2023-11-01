@@ -3,6 +3,7 @@
 var Dexie = require('dexie');
 var tnCloneobj = require('tn-cloneobj');
 var tnDiff = require('tn-diff');
+var tnTimeout = require('tn-timeout');
 class Undo {
   db;
   version = 0;
@@ -76,4 +77,41 @@ class Undo {
     return redovalue;
   }
 }
+const $undo = new Undo();
+class UndoStack {
+  section;
+  methods;
+  timeout = null;
+  constructor(section, methods) {
+    this.section = section;
+    this.methods = methods;
+    if (this.methods.timeout) this.timeout = new tnTimeout.Timeout(this.methods.timeout);
+  }
+  get enabled() {
+    return !!this.methods;
+  }
+  get ns() {
+    return `${this.section}.${this.methods.namespace()}`;
+  }
+  get value() {
+    return this.methods.value();
+  }
+  async change(value) {
+    if (value === undefined) return;
+    this.methods.onChange(value);
+  }
+  async undo() {
+    if (!this.enabled) return;
+    this.change(await $undo.undo(this.ns));
+  }
+  async redo() {
+    if (!this.enabled) return;
+    this.change(await $undo.redo(this.ns));
+  }
+  update() {
+    if (!this.enabled) return;
+    if (!this.timeout) $undo.update(this.ns, this.value);else this.timeout.queue(() => $undo.update(this.ns, this.value));
+  }
+}
 exports.Undo = Undo;
+exports.UndoStack = UndoStack;
