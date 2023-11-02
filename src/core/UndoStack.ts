@@ -15,7 +15,7 @@ export class UndoStack<T> {
   constructor(section?: string, methods?: Methods<T>) {
     this.section = section!
     this.methods = methods!
-    if (this.methods.timeout) this.timeout = new Timeout(this.methods.timeout)
+    if (methods?.timeout) this.timeout = new Timeout(methods?.timeout)
   }
 
   private get enabled() {
