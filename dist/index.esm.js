@@ -83,7 +83,7 @@ class UndoStack {
   constructor(section, methods) {
     this.section = section;
     this.methods = methods;
-    if (this.methods.timeout) this.timeout = new Timeout(this.methods.timeout);
+    if (methods?.timeout) this.timeout = new Timeout(methods?.timeout);
   }
   get enabled() {
     return !!this.methods;
