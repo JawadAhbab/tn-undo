@@ -5,28 +5,30 @@ import { ObjectOf } from 'tn-typescript'
 import { sleep } from 'tn-sleep'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
-// BUG startup closed
-// BUG createTable closed
 
 export class Undo {
   private db!: Dexie
+  private dbname: string
   private version = 0
   private namespaces: ObjectOf<Namespace> = {}
-  constructor(dbname?: string) {
-    this.createDatabase(dbname)
+  constructor(dbname = 'Undo') {
+    this.dbname = dbname
   }
 
-  private async createDatabase(dbname = 'Undo') {
-    await Dexie.delete(dbname)
-    this.db = new Dexie(dbname)
+  private dbcreated = false
+  private async ensureDatabase() {
+    if (this.dbcreated) return
+    this.dbcreated = true
+    await Dexie.delete(this.dbname)
+    this.db = new Dexie(this.dbname)
     this.db.version(++this.version).stores({})
-    this.db.open()
+    await this.db.open()
   }
 
   private async ensureOpen() {
-    console.log('ensuring', this.db, this.db && this.db.isOpen())
+    await this.ensureDatabase()
     if (this.db?.isOpen()) return
-    await sleep(1000)
+    await sleep(25)
     await this.ensureOpen()
   }
 

@@ -921,7 +921,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.7", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.0", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
   version "7.23.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
   integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
@@ -1503,6 +1503,11 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
+nanoid@^3.3.4:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
+  integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
+
 node-releases@^2.0.13:
   version "2.0.13"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.13.tgz#d5ed1627c23e3461e819b02e57b75e4899b1c81d"
@@ -1762,6 +1767,25 @@ tn-mergeobj@^2.0.0:
     "@babel/runtime" "^7.20.13"
     tn-validate "^4.0.0"
 
+tn-react-hooks@^1.5.3:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/tn-react-hooks/-/tn-react-hooks-1.7.1.tgz#daf1698ad4ab7740cadebab0732ee95009548243"
+  integrity sha512-QTAx5ct1SlQkHFtxiorjUvHc872WjJwFaiNupdiAlzfpKGy5s2s+jvygPo7Q2RAvVtwHzJPKq/RPIU2Yjo6YsA==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
+    tn-typescript "^2.1.1"
+    tn-uniqid "^1.0.1"
+
+tn-reactive@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/tn-reactive/-/tn-reactive-7.3.0.tgz#090af69d96b527fba06f5e5c170e0241a13da8eb"
+  integrity sha512-fP67LbMzrBs8ivXK367l2vMv235SLerlGtMUC8Uoy5znrSGn5f8Ns33dresfw6wRDcOHQ+NKcmzp7PWeF22odg==
+  dependencies:
+    "@babel/runtime" "^7.21.5"
+    nanoid "^3.3.4"
+    tn-react-hooks "^1.5.3"
+    tn-validate "^4.0.0"
+
 tn-sleep@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/tn-sleep/-/tn-sleep-1.0.0.tgz#73bd55a7582a35772b8ac856cd9bde6d1d0dd5ab"
@@ -1780,6 +1804,14 @@ tn-typescript@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/tn-typescript/-/tn-typescript-2.1.1.tgz#f65dabe03f98ee8986fcc32ea77bd45a53ee13f8"
   integrity sha512-CeBuSda9wRGHexNS1dUgaczPW9fFVFdLND2s5PXxZ82kvIbjEbIaQD5yWvf7wPcrgFUCUqpQP90IJ/tpcejXlQ==
+
+tn-uniqid@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/tn-uniqid/-/tn-uniqid-1.0.1.tgz#f4ee4acf8f0214eab6b71d181a9a953ccf86bf90"
+  integrity sha512-oEuwg+rSbrME9pMFqc+xZ3ueXlsakwDoh/ES5lZdzwgzHLhJFbemfsTHOhPpkLWLgg4LjJrlUTAarc85jBUOeQ==
+  dependencies:
+    "@babel/runtime" "^7.20.0"
+    nanoid "^3.3.4"
 
 tn-validate@^4.0.0:
   version "4.0.0"
