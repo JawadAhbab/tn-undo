@@ -2,6 +2,7 @@ import Dexie from 'dexie'
 import { cloneobj } from 'tn-cloneobj'
 import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
+import { sleep } from 'tn-sleep'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
 // BUG startup closed
@@ -18,10 +19,20 @@ export class Undo {
   private async createDatabase(dbname = 'Undo') {
     await Dexie.delete(dbname)
     this.db = new Dexie(dbname)
+    this.db.version(++this.version).stores({})
+    this.db.open()
+  }
+
+  private async ensureOpen() {
+    console.log('ensuring', this.db, this.db && this.db.isOpen())
+    if (this.db?.isOpen()) return
+    await sleep(1000)
+    await this.ensureOpen()
   }
 
   private async createTable(namespace: string, initvalue: any) {
     this.namespaces[namespace] = { serial: 0, lastvalue: initvalue }
+    await this.ensureOpen()
     this.db.close()
     this.db.version(++this.version).stores({ [namespace]: 'serial' })
     await this.db.open()

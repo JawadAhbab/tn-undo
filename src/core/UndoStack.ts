@@ -1,6 +1,6 @@
 import { Timeout } from 'tn-timeout'
 import { Undo } from './Undo'
-const $undo = new Undo()
+export const undo = new Undo()
 interface Methods<T> {
   timeout?: number
   value: () => T
@@ -34,15 +34,15 @@ export class UndoStack<T> {
 
   public async undo() {
     if (!this.enabled) return
-    this.change(await $undo.undo(this.ns))
+    this.change(await undo.undo(this.ns))
   }
   public async redo() {
     if (!this.enabled) return
-    this.change(await $undo.redo(this.ns))
+    this.change(await undo.redo(this.ns))
   }
   public update() {
     if (!this.enabled) return
-    if (!this.timeout) $undo.update(this.ns, this.value)
-    else this.timeout.queue(() => $undo.update(this.ns, this.value))
+    if (!this.timeout) undo.update(this.ns, this.value)
+    else this.timeout.queue(() => undo.update(this.ns, this.value))
   }
 }

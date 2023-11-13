@@ -921,7 +921,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.20.7", "@babel/runtime@^7.23.2", "@babel/runtime@^7.8.4":
   version "7.23.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
   integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
@@ -1761,6 +1761,13 @@ tn-mergeobj@^2.0.0:
   dependencies:
     "@babel/runtime" "^7.20.13"
     tn-validate "^4.0.0"
+
+tn-sleep@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tn-sleep/-/tn-sleep-1.0.0.tgz#73bd55a7582a35772b8ac856cd9bde6d1d0dd5ab"
+  integrity sha512-x+vR4xnt6BvxcjO18Nq5rcqJlw/raS6+8G8r5ILhtoTagEC+xTJoBwbiAzJMYbGFvSHexj+tL5l4TfCMKEhZpQ==
+  dependencies:
+    "@babel/runtime" "^7.20.7"
 
 tn-timeout@^1.0.0:
   version "1.0.0"
