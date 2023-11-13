@@ -4,6 +4,8 @@ import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
+// BUG startup closed
+// BUG createTable closed
 
 export class Undo {
   private db!: Dexie
@@ -36,17 +38,18 @@ export class Undo {
     const diff = getDiff(ns.lastvalue, currval)
     if (diff[0] === DiffKind.IDENTICAL) return
 
-    const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys()
-    this.table(namespace).bulkDelete(remkeys as any)
+    const table = this.table(namespace)
+    const remkeys = await table.where('serial').above(ns.serial).keys()
+    table.bulkDelete(remkeys as any)
 
-    const laststack = await this.table(namespace).get(ns.serial as any)
+    const laststack = await table.get(ns.serial as any)
     if (laststack) {
       const merge = mergeable(1, currval, laststack.diff, diff)
-      if (merge.merged) await this.table(namespace).update(laststack, { diff: merge.diff })
-      else await this.table(namespace).put({ serial: ++ns.serial, diff })
+      if (merge.merged) await table.update(laststack, { diff: merge.diff })
+      else await table.put({ serial: ++ns.serial, diff })
       ns.lastvalue = currval
     } else {
-      await this.table(namespace).put({ serial: ++ns.serial, diff })
+      await table.put({ serial: ++ns.serial, diff })
       ns.lastvalue = currval
     }
   }
