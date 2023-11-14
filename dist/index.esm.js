@@ -132,9 +132,6 @@ class UndoStack {
   get ns() {
     return `${this.section}.${this.methods.namespace()}`;
   }
-  get value() {
-    return this.methods.value();
-  }
   async change(value) {
     if (value === undefined) return;
     this.methods.onChange(value);
@@ -151,10 +148,11 @@ class UndoStack {
     if (!this.enabled) return;
     return undo.serial(this.ns);
   }
-  update() {
+  async update() {
     let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.maxdistance;
     if (!this.enabled) return;
-    if (!this.timeout) undo.update(this.ns, this.value);else this.timeout.queue(() => undo.update(this.ns, this.value, maxdistance));
+    const value = await this.methods.value();
+    if (!this.timeout) undo.update(this.ns, value);else this.timeout.queue(() => undo.update(this.ns, value, maxdistance));
   }
 }
 export { Undo, UndoStack };
