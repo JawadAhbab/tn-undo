@@ -13,5 +13,5 @@ export declare class Undo {
     update(namespace: string, curr: any, maxdistance?: number): Promise<void>;
     undo(namespace: string): Promise<any>;
     redo(namespace: string): Promise<any>;
-    serial(namespace: string): number;
+    serial(namespace: string): Promise<number>;
 }

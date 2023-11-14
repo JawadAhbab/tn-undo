@@ -112,8 +112,10 @@ class Undo {
     });
   }
   serial(namespace) {
-    const ns = this.namespaces[namespace];
-    return ns.serial;
+    return this.task(async () => {
+      const ns = this.namespaces[namespace];
+      return ns.serial;
+    });
   }
 }
 const undo = new Undo('UndoStack');
@@ -146,7 +148,7 @@ class UndoStack {
     this.checkenable();
     this.change(await undo.redo(this.ns));
   }
-  serial() {
+  async serial() {
     this.checkenable();
     return undo.serial(this.ns);
   }
