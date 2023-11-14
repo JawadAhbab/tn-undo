@@ -7,7 +7,7 @@ interface Methods<T> {
   maxdistance?: number
   value: () => T | Promise<T>
   namespace: () => string
-  onChange: (value: T) => void
+  onChange: (value: T, prevalue: T) => void
 }
 
 export class UndoStack<T> {
@@ -28,18 +28,20 @@ export class UndoStack<T> {
   private get ns() {
     return `${this.section}.${this.methods.namespace()}`
   }
-  public async change(value: any) {
+  public async change(value: any, prevalue: any) {
     if (value === undefined) return
-    this.methods.onChange(value)
+    this.methods.onChange(value, prevalue)
   }
 
   public async undo() {
     this.checkenable()
-    this.change(await undo.undo(this.ns))
+    const prevalue = await undo.lastvalue(this.ns)
+    this.change(await undo.undo(this.ns), prevalue)
   }
   public async redo() {
     this.checkenable()
-    this.change(await undo.redo(this.ns))
+    const prevalue = await undo.lastvalue(this.ns)
+    this.change(await undo.redo(this.ns), prevalue)
   }
   public async serial() {
     this.checkenable()

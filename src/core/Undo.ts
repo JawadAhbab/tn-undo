@@ -119,4 +119,11 @@ export class Undo {
       return ns?.serial || 0
     })
   }
+
+  public lastvalue(namespace: string) {
+    return this.task(async () => {
+      const ns = this.namespaces[namespace]
+      return ns.lastvalue
+    })
+  }
 }
