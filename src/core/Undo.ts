@@ -4,6 +4,11 @@ import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
+interface Task {
+  resolve: (value: PromiseLike<any>) => void
+  reject: (value: PromiseLike<any>) => void
+  exec: () => Promise<any>
+}
 
 export class Undo {
   private db!: Dexie
@@ -13,8 +18,28 @@ export class Undo {
     this.ensureDatabase(dbname)
   }
 
-  private tasks = []
-  private task<T>(exec: () => T | Promise<T>): Promise<T> {}
+  private tasks: Task[] = []
+  private running = false
+  private task<T>(exec: () => Promise<T>): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      this.tasks.push({ resolve, reject, exec })
+      this.runTask()
+    })
+  }
+  private async runTask() {
+    if (this.running) return
+    const task = this.tasks.shift()
+    if (!task) return
+    this.running = true
+    task
+      .exec()
+      .then(res => task.resolve(res))
+      .catch(err => task.reject(err))
+      .finally(() => {
+        this.running = false
+        this.runTask()
+      })
+  }
 
   private async ensureDatabase(dbname: string) {
     this.task(async () => {
