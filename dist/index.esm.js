@@ -65,7 +65,7 @@ class Undo {
       if (diff$1[0] === DiffKind.IDENTICAL) return;
       const table = this.table(namespace);
       const remkeys = await table.where('serial').above(ns.serial).keys();
-      table.bulkDelete(remkeys);
+      await table.bulkDelete(remkeys);
       const laststack = await table.get(ns.serial);
       if (laststack) {
         const merge = mergeable(maxdistance, currval, laststack.diff, diff$1);
