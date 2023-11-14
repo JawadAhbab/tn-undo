@@ -4,7 +4,7 @@ export const undo = new Undo('UndoStack')
 interface Methods<T> {
   timeout?: number
   maxdistance?: number
-  value: () => T
+  value: () => T | Promise<T>
   namespace: () => string
   onChange: (value: T) => void
 }
@@ -27,9 +27,6 @@ export class UndoStack<T> {
   private get ns() {
     return `${this.section}.${this.methods.namespace()}`
   }
-  private get value() {
-    return this.methods.value()
-  }
   public async change(value: any) {
     if (value === undefined) return
     this.methods.onChange(value)
@@ -47,9 +44,10 @@ export class UndoStack<T> {
     if (!this.enabled) return
     return undo.serial(this.ns)
   }
-  public update(maxdistance = this.maxdistance) {
+  public async update(maxdistance = this.maxdistance) {
     if (!this.enabled) return
-    if (!this.timeout) undo.update(this.ns, this.value)
-    else this.timeout.queue(() => undo.update(this.ns, this.value, maxdistance))
+    const value = await this.methods.value()
+    if (!this.timeout) undo.update(this.ns, value)
+    else this.timeout.queue(() => undo.update(this.ns, value, maxdistance))
   }
 }
