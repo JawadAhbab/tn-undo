@@ -154,9 +154,14 @@ class UndoStack {
   }
   async update() {
     let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.maxdistance;
+    let callback = arguments.length > 1 ? arguments[1] : undefined;
     this.checkenable();
     const value = await this.methods.value();
-    if (!this.timeout) undo.update(this.ns, value);else this.timeout.queue(() => undo.update(this.ns, value, maxdistance));
+    const update = async () => {
+      await undo.update(this.ns, value, maxdistance);
+      callback && callback();
+    };
+    if (!this.timeout) update();else this.timeout.queue(() => update());
   }
   checkenable() {
     if (!this.enabled) throw new Error('UndoStack is disabled as noting given in new UndoStack()');

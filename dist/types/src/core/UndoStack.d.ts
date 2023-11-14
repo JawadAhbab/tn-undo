@@ -1,4 +1,5 @@
 import { Undo } from './Undo';
+import { Func } from 'tn-typescript';
 export declare const undo: Undo;
 interface Methods<T> {
     timeout?: number;
@@ -19,7 +20,7 @@ export declare class UndoStack<T> {
     undo(): Promise<void>;
     redo(): Promise<void>;
     serial(): Promise<number>;
-    update(maxdistance?: number): Promise<void>;
+    update(maxdistance?: number, callback?: Func): Promise<void>;
     private checkenable;
 }
 export {};
