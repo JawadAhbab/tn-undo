@@ -2,12 +2,13 @@ import { Timeout } from 'tn-timeout'
 import { Undo } from './Undo'
 import { Func } from 'tn-typescript'
 export const undo = new Undo('UndoStack')
+type Action = 'undo' | 'redo'
 interface Methods<T> {
   timeout?: number
   maxdistance?: number
   value: () => T | Promise<T>
   namespace: () => string
-  onChange: (value: T, prevalue: T) => void
+  onChange: (value: T, prevalue: T, action: Action) => void
 }
 
 export class UndoStack<T> {
@@ -28,20 +29,20 @@ export class UndoStack<T> {
   private get ns() {
     return `${this.section}.${this.methods.namespace()}`
   }
-  public async change(value: any, prevalue: any) {
+  public async change(value: any, prevalue: any, action: Action) {
     if (value === undefined) return
-    this.methods.onChange(value, prevalue)
+    this.methods.onChange(value, prevalue, action)
   }
 
   public async undo() {
     this.checkenable()
     const prevalue = await undo.lastvalue(this.ns)
-    this.change(await undo.undo(this.ns), prevalue)
+    this.change(await undo.undo(this.ns), prevalue, 'undo')
   }
   public async redo() {
     this.checkenable()
     const prevalue = await undo.lastvalue(this.ns)
-    this.change(await undo.redo(this.ns), prevalue)
+    this.change(await undo.redo(this.ns), prevalue, 'redo')
   }
   public async serial() {
     this.checkenable()
