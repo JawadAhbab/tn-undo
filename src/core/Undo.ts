@@ -114,7 +114,9 @@ export class Undo {
   }
 
   public serial(namespace: string) {
-    const ns = this.namespaces[namespace]
-    return ns.serial
+    return this.task(async () => {
+      const ns = this.namespaces[namespace]
+      return ns.serial
+    })
   }
 }

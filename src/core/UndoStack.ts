@@ -40,7 +40,7 @@ export class UndoStack<T> {
     this.checkenable()
     this.change(await undo.redo(this.ns))
   }
-  public serial() {
+  public async serial() {
     this.checkenable()
     return undo.serial(this.ns)
   }
