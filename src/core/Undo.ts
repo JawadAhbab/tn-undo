@@ -112,4 +112,9 @@ export class Undo {
       return redovalue
     })
   }
+
+  public serial(namespace: string) {
+    const ns = this.namespaces[namespace]
+    return ns.serial
+  }
 }

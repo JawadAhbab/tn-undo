@@ -40,6 +40,10 @@ export class UndoStack<T> {
     if (!this.enabled) return
     this.change(await undo.redo(this.ns))
   }
+  public async serial() {
+    if (!this.enabled) return
+    return undo.serial(this.ns)
+  }
   public update(maxdistance = 1) {
     if (!this.enabled) return
     if (!this.timeout) undo.update(this.ns, this.value)
