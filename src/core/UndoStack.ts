@@ -33,21 +33,25 @@ export class UndoStack<T> {
   }
 
   public async undo() {
-    if (!this.enabled) return
+    this.checkenable()
     this.change(await undo.undo(this.ns))
   }
   public async redo() {
-    if (!this.enabled) return
+    this.checkenable()
     this.change(await undo.redo(this.ns))
   }
-  public async serial() {
-    if (!this.enabled) return
+  public serial() {
+    this.checkenable()
     return undo.serial(this.ns)
   }
   public async update(maxdistance = this.maxdistance) {
-    if (!this.enabled) return
+    this.checkenable()
     const value = await this.methods.value()
     if (!this.timeout) undo.update(this.ns, value)
     else this.timeout.queue(() => undo.update(this.ns, value, maxdistance))
+  }
+
+  private checkenable() {
+    if (!this.enabled) throw new Error('UndoStack is disabled as noting given in new UndoStack()')
   }
 }
