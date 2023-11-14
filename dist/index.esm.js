@@ -112,7 +112,7 @@ class Undo {
   serial(namespace) {
     return this.task(async () => {
       const ns = this.namespaces[namespace];
-      return ns.serial;
+      return ns?.serial || 0;
     });
   }
 }
