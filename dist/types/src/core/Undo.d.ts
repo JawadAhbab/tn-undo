@@ -10,7 +10,7 @@ export declare class Undo {
     private ensureDatabase;
     private createTable;
     private table;
-    update(namespace: string, curr: any): Promise<void>;
+    update(namespace: string, curr: any, maxdistance?: number): Promise<void>;
     undo(namespace: string): Promise<any>;
     redo(namespace: string): Promise<any>;
 }

@@ -58,6 +58,7 @@ class Undo {
     return this.db[namespace];
   }
   update(namespace, curr) {
+    let maxdistance = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
     return this.task(async () => {
       const currval = tnCloneobj.cloneobj(curr, true, false);
       const ns = this.namespaces[namespace];
@@ -69,7 +70,7 @@ class Undo {
       table.bulkDelete(remkeys);
       const laststack = await table.get(ns.serial);
       if (laststack) {
-        const merge = tnDiff.mergeable(1, currval, laststack.diff, diff);
+        const merge = tnDiff.mergeable(maxdistance, currval, laststack.diff, diff);
         if (merge.merged) await table.update(laststack, {
           diff: merge.diff
         });else await table.put({
@@ -143,8 +144,9 @@ class UndoStack {
     this.change(await undo.redo(this.ns));
   }
   update() {
+    let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
     if (!this.enabled) return;
-    if (!this.timeout) undo.update(this.ns, this.value);else this.timeout.queue(() => undo.update(this.ns, this.value));
+    if (!this.timeout) undo.update(this.ns, this.value);else this.timeout.queue(() => undo.update(this.ns, this.value, maxdistance));
   }
 }
 exports.Undo = Undo;
