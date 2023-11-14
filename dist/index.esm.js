@@ -140,19 +140,19 @@ class UndoStack {
   get ns() {
     return `${this.section}.${this.methods.namespace()}`;
   }
-  async change(value, prevalue) {
+  async change(value, prevalue, action) {
     if (value === undefined) return;
-    this.methods.onChange(value, prevalue);
+    this.methods.onChange(value, prevalue, action);
   }
   async undo() {
     this.checkenable();
     const prevalue = await undo.lastvalue(this.ns);
-    this.change(await undo.undo(this.ns), prevalue);
+    this.change(await undo.undo(this.ns), prevalue, 'undo');
   }
   async redo() {
     this.checkenable();
     const prevalue = await undo.lastvalue(this.ns);
-    this.change(await undo.redo(this.ns), prevalue);
+    this.change(await undo.redo(this.ns), prevalue, 'redo');
   }
   async serial() {
     this.checkenable();
