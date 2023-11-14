@@ -8,13 +8,40 @@ class Undo {
   db;
   version = 0;
   namespaces = {};
-  constructor(dbname) {
-    this.createDatabase(dbname);
-  }
-  async createDatabase() {
+  constructor() {
     let dbname = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Undo';
-    await Dexie.delete(dbname);
-    this.db = new Dexie(dbname);
+    this.ensureDatabase(dbname);
+  }
+  tasks = [];
+  running = false;
+  task(exec) {
+    return new Promise((resolve, reject) => {
+      this.tasks.push({
+        resolve,
+        reject,
+        exec
+      });
+      this.runTask();
+    });
+  }
+  async runTask() {
+    if (this.running) return;
+    const task = this.tasks.shift();
+    if (!task) return;
+    this.running = true;
+    task.exec().then(res => task.resolve(res)).catch(err => task.reject(err)).finally(() => {
+      this.running = false;
+      this.runTask();
+    });
+  }
+  async ensureDatabase(dbname) {
+    this.task(async () => {
+      await Dexie.delete(dbname);
+      this.db = new Dexie(dbname);
+      this.db.version(++this.version).stores({});
+      await this.db.open();
+      return true;
+    });
   }
   async createTable(namespace, initvalue) {
     this.namespaces[namespace] = {
@@ -30,54 +57,61 @@ class Undo {
   table(namespace) {
     return this.db[namespace];
   }
-  async update(namespace, curr) {
-    const currval = tnCloneobj.cloneobj(curr, true, false);
-    const ns = this.namespaces[namespace];
-    if (!ns) return await this.createTable(namespace, currval);
-    const diff = tnDiff.diff(ns.lastvalue, currval);
-    if (diff[0] === tnDiff.DiffKind.IDENTICAL) return;
-    const remkeys = await this.table(namespace).where('serial').above(ns.serial).keys();
-    this.table(namespace).bulkDelete(remkeys);
-    const laststack = await this.table(namespace).get(ns.serial);
-    if (laststack) {
-      const merge = tnDiff.mergeable(1, currval, laststack.diff, diff);
-      if (merge.merged) await this.table(namespace).update(laststack, {
-        diff: merge.diff
-      });else await this.table(namespace).put({
-        serial: ++ns.serial,
-        diff
-      });
-      ns.lastvalue = currval;
-    } else {
-      await this.table(namespace).put({
-        serial: ++ns.serial,
-        diff
-      });
-      ns.lastvalue = currval;
-    }
+  update(namespace, curr) {
+    return this.task(async () => {
+      const currval = tnCloneobj.cloneobj(curr, true, false);
+      const ns = this.namespaces[namespace];
+      if (!ns) return await this.createTable(namespace, currval);
+      const diff = tnDiff.diff(ns.lastvalue, currval);
+      if (diff[0] === tnDiff.DiffKind.IDENTICAL) return;
+      const table = this.table(namespace);
+      const remkeys = await table.where('serial').above(ns.serial).keys();
+      table.bulkDelete(remkeys);
+      const laststack = await table.get(ns.serial);
+      if (laststack) {
+        const merge = tnDiff.mergeable(1, currval, laststack.diff, diff);
+        if (merge.merged) await table.update(laststack, {
+          diff: merge.diff
+        });else await table.put({
+          serial: ++ns.serial,
+          diff
+        });
+        ns.lastvalue = currval;
+      } else {
+        await table.put({
+          serial: ++ns.serial,
+          diff
+        });
+        ns.lastvalue = currval;
+      }
+    });
   }
-  async undo(namespace) {
-    const ns = this.namespaces[namespace];
-    if (!ns) return undefined;
-    const laststack = await this.table(namespace).get(ns.serial);
-    if (!laststack) return ns.lastvalue;
-    const undovalue = tnDiff.undo(ns.lastvalue, laststack.diff);
-    ns.serial -= 1;
-    ns.lastvalue = undovalue;
-    return undovalue;
+  undo(namespace) {
+    return this.task(async () => {
+      const ns = this.namespaces[namespace];
+      if (!ns) return undefined;
+      const laststack = await this.table(namespace).get(ns.serial);
+      if (!laststack) return ns.lastvalue;
+      const undovalue = tnDiff.undo(ns.lastvalue, laststack.diff);
+      ns.serial -= 1;
+      ns.lastvalue = undovalue;
+      return undovalue;
+    });
   }
-  async redo(namespace) {
-    const ns = this.namespaces[namespace];
-    if (!ns) return undefined;
-    const nextstack = await this.table(namespace).get(ns.serial + 1);
-    if (!nextstack) return ns.lastvalue;
-    const redovalue = tnDiff.redo(ns.lastvalue, nextstack.diff);
-    ns.serial += 1;
-    ns.lastvalue = redovalue;
-    return redovalue;
+  redo(namespace) {
+    return this.task(async () => {
+      const ns = this.namespaces[namespace];
+      if (!ns) return undefined;
+      const nextstack = await this.table(namespace).get(ns.serial + 1);
+      if (!nextstack) return ns.lastvalue;
+      const redovalue = tnDiff.redo(ns.lastvalue, nextstack.diff);
+      ns.serial += 1;
+      ns.lastvalue = redovalue;
+      return redovalue;
+    });
   }
 }
-const $undo = new Undo();
+const undo = new Undo();
 class UndoStack {
   section;
   methods;
@@ -102,15 +136,15 @@ class UndoStack {
   }
   async undo() {
     if (!this.enabled) return;
-    this.change(await $undo.undo(this.ns));
+    this.change(await undo.undo(this.ns));
   }
   async redo() {
     if (!this.enabled) return;
-    this.change(await $undo.redo(this.ns));
+    this.change(await undo.redo(this.ns));
   }
   update() {
     if (!this.enabled) return;
-    if (!this.timeout) $undo.update(this.ns, this.value);else this.timeout.queue(() => $undo.update(this.ns, this.value));
+    if (!this.timeout) undo.update(this.ns, this.value);else this.timeout.queue(() => undo.update(this.ns, this.value));
   }
 }
 exports.Undo = Undo;

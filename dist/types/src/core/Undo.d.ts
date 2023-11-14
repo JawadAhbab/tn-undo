@@ -3,7 +3,11 @@ export declare class Undo {
     private version;
     private namespaces;
     constructor(dbname?: string);
-    private createDatabase;
+    private tasks;
+    private running;
+    private task;
+    private runTask;
+    private ensureDatabase;
     private createTable;
     private table;
     update(namespace: string, curr: any): Promise<void>;

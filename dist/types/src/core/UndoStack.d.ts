@@ -1,3 +1,5 @@
+import { Undo } from './Undo';
+export declare const undo: Undo;
 interface Methods<T> {
     timeout?: number;
     value: () => T;
