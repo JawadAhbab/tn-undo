@@ -137,22 +137,25 @@ class UndoStack {
     this.methods.onChange(value);
   }
   async undo() {
-    if (!this.enabled) return;
+    this.checkenable();
     this.change(await undo.undo(this.ns));
   }
   async redo() {
-    if (!this.enabled) return;
+    this.checkenable();
     this.change(await undo.redo(this.ns));
   }
-  async serial() {
-    if (!this.enabled) return;
+  serial() {
+    this.checkenable();
     return undo.serial(this.ns);
   }
   async update() {
     let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.maxdistance;
-    if (!this.enabled) return;
+    this.checkenable();
     const value = await this.methods.value();
     if (!this.timeout) undo.update(this.ns, value);else this.timeout.queue(() => undo.update(this.ns, value, maxdistance));
+  }
+  checkenable() {
+    if (!this.enabled) throw new Error('UndoStack is disabled as noting given in new UndoStack()');
   }
 }
 export { Undo, UndoStack };

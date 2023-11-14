@@ -18,7 +18,8 @@ export declare class UndoStack<T> {
     change(value: any): Promise<void>;
     undo(): Promise<void>;
     redo(): Promise<void>;
-    serial(): Promise<number | undefined>;
+    serial(): number;
     update(maxdistance?: number): Promise<void>;
+    private checkenable;
 }
 export {};
