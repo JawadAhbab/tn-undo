@@ -1,5 +1,6 @@
 import { Timeout } from 'tn-timeout'
 import { Undo } from './Undo'
+import { Func } from 'tn-typescript'
 export const undo = new Undo('UndoStack')
 interface Methods<T> {
   timeout?: number
@@ -44,11 +45,15 @@ export class UndoStack<T> {
     this.checkenable()
     return undo.serial(this.ns)
   }
-  public async update(maxdistance = this.maxdistance) {
+  public async update(maxdistance = this.maxdistance, callback?: Func) {
     this.checkenable()
     const value = await this.methods.value()
-    if (!this.timeout) undo.update(this.ns, value)
-    else this.timeout.queue(() => undo.update(this.ns, value, maxdistance))
+    const update = async () => {
+      await undo.update(this.ns, value, maxdistance)
+      callback && callback()
+    }
+    if (!this.timeout) update()
+    else this.timeout.queue(() => update())
   }
 
   private checkenable() {
