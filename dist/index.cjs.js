@@ -116,14 +116,16 @@ class Undo {
     return ns.serial;
   }
 }
-const undo = new Undo();
+const undo = new Undo('UndoStack');
 class UndoStack {
   section;
   methods;
   timeout = null;
+  maxdistance;
   constructor(section, methods) {
     this.section = section;
     this.methods = methods;
+    this.maxdistance = methods?.maxdistance ?? 1;
     if (methods?.timeout) this.timeout = new tnTimeout.Timeout(methods?.timeout);
   }
   get enabled() {
@@ -152,7 +154,7 @@ class UndoStack {
     return undo.serial(this.ns);
   }
   update() {
-    let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.maxdistance;
     if (!this.enabled) return;
     if (!this.timeout) undo.update(this.ns, this.value);else this.timeout.queue(() => undo.update(this.ns, this.value, maxdistance));
   }
