@@ -40,9 +40,9 @@ export class UndoStack<T> {
     if (!this.enabled) return
     this.change(await undo.redo(this.ns))
   }
-  public update() {
+  public update(maxdistance = 1) {
     if (!this.enabled) return
     if (!this.timeout) undo.update(this.ns, this.value)
-    else this.timeout.queue(() => undo.update(this.ns, this.value))
+    else this.timeout.queue(() => undo.update(this.ns, this.value, maxdistance))
   }
 }

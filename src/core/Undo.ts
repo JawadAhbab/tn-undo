@@ -62,7 +62,7 @@ export class Undo {
     return (this.db as any)[namespace]
   }
 
-  public update(namespace: string, curr: any) {
+  public update(namespace: string, curr: any, maxdistance = 1) {
     return this.task(async () => {
       const currval = cloneobj(curr, true, false)
       const ns = this.namespaces[namespace]
@@ -76,7 +76,7 @@ export class Undo {
 
       const laststack = await table.get(ns.serial as any)
       if (laststack) {
-        const merge = mergeable(1, currval, laststack.diff, diff)
+        const merge = mergeable(maxdistance, currval, laststack.diff, diff)
         if (merge.merged) await table.update(laststack, { diff: merge.diff })
         else await table.put({ serial: ++ns.serial, diff })
         ns.lastvalue = currval
