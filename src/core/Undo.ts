@@ -72,7 +72,7 @@ export class Undo {
 
       const table = this.table(namespace)
       const remkeys = await table.where('serial').above(ns.serial).keys()
-      table.bulkDelete(remkeys as any)
+      await table.bulkDelete(remkeys as any)
 
       const laststack = await table.get(ns.serial as any)
       if (laststack) {
