@@ -117,6 +117,12 @@ class Undo {
       return ns?.serial || 0;
     });
   }
+  lastvalue(namespace) {
+    return this.task(async () => {
+      const ns = this.namespaces[namespace];
+      return ns.lastvalue;
+    });
+  }
 }
 const undo = new Undo('UndoStack');
 class UndoStack {
@@ -136,17 +142,19 @@ class UndoStack {
   get ns() {
     return `${this.section}.${this.methods.namespace()}`;
   }
-  async change(value) {
+  async change(value, prevalue) {
     if (value === undefined) return;
-    this.methods.onChange(value);
+    this.methods.onChange(value, prevalue);
   }
   async undo() {
     this.checkenable();
-    this.change(await undo.undo(this.ns));
+    const prevalue = await undo.lastvalue(this.ns);
+    this.change(await undo.undo(this.ns), prevalue);
   }
   async redo() {
     this.checkenable();
-    this.change(await undo.redo(this.ns));
+    const prevalue = await undo.lastvalue(this.ns);
+    this.change(await undo.redo(this.ns), prevalue);
   }
   async serial() {
     this.checkenable();

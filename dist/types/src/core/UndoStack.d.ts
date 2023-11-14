@@ -6,7 +6,7 @@ interface Methods<T> {
     maxdistance?: number;
     value: () => T | Promise<T>;
     namespace: () => string;
-    onChange: (value: T) => void;
+    onChange: (value: T, prevalue: T) => void;
 }
 export declare class UndoStack<T> {
     private section;
@@ -16,7 +16,7 @@ export declare class UndoStack<T> {
     constructor(section?: string, methods?: Methods<T>);
     private get enabled();
     private get ns();
-    change(value: any): Promise<void>;
+    change(value: any, prevalue: any): Promise<void>;
     undo(): Promise<void>;
     redo(): Promise<void>;
     serial(): Promise<number>;

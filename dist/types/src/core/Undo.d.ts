@@ -14,4 +14,5 @@ export declare class Undo {
     undo(namespace: string): Promise<any>;
     redo(namespace: string): Promise<any>;
     serial(namespace: string): Promise<number>;
+    lastvalue(namespace: string): Promise<any>;
 }
