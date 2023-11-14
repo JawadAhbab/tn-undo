@@ -111,6 +111,10 @@ class Undo {
       return redovalue;
     });
   }
+  serial(namespace) {
+    const ns = this.namespaces[namespace];
+    return ns.serial;
+  }
 }
 const undo = new Undo();
 class UndoStack {
@@ -142,6 +146,10 @@ class UndoStack {
   async redo() {
     if (!this.enabled) return;
     this.change(await undo.redo(this.ns));
+  }
+  async serial() {
+    if (!this.enabled) return;
+    return undo.serial(this.ns);
   }
   update() {
     let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
