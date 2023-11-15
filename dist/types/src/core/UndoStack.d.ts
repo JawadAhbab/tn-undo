@@ -21,7 +21,7 @@ export declare class UndoStack<T> {
     undo(): Promise<void>;
     redo(): Promise<void>;
     serial(): Promise<number>;
-    lastvalue(): Promise<any>;
+    lastvalue(): Promise<T>;
     update(maxdistance?: number, callback?: Func): Promise<void>;
     private checkenable;
 }
