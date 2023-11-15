@@ -48,7 +48,7 @@ export class UndoStack<T> {
     this.checkenable()
     return $undo.serial(this.ns)
   }
-  public async lastvalue() {
+  public async lastvalue(): Promise<T> {
     this.checkenable()
     return $undo.lastvalue(this.ns)
   }
