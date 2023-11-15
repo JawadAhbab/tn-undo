@@ -124,7 +124,7 @@ class Undo {
     });
   }
 }
-const undo = new Undo('UndoStack');
+const $undo = new Undo('UndoStack');
 class UndoStack {
   section;
   methods;
@@ -148,17 +148,21 @@ class UndoStack {
   }
   async undo() {
     this.checkenable();
-    const prevalue = await undo.lastvalue(this.ns);
-    this.change(await undo.undo(this.ns), prevalue, 'undo');
+    const prevalue = await $undo.lastvalue(this.ns);
+    this.change(await $undo.undo(this.ns), prevalue, 'undo');
   }
   async redo() {
     this.checkenable();
-    const prevalue = await undo.lastvalue(this.ns);
-    this.change(await undo.redo(this.ns), prevalue, 'redo');
+    const prevalue = await $undo.lastvalue(this.ns);
+    this.change(await $undo.redo(this.ns), prevalue, 'redo');
   }
   async serial() {
     this.checkenable();
-    return undo.serial(this.ns);
+    return $undo.serial(this.ns);
+  }
+  async lastvalue() {
+    this.checkenable();
+    return $undo.lastvalue(this.ns);
   }
   async update() {
     let maxdistance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.maxdistance;
@@ -166,7 +170,7 @@ class UndoStack {
     this.checkenable();
     const value = await this.methods.value();
     const update = async () => {
-      await undo.update(this.ns, value, maxdistance);
+      await $undo.update(this.ns, value, maxdistance);
       callback && callback();
     };
     if (!this.timeout) update();else this.timeout.queue(() => update());
@@ -175,5 +179,6 @@ class UndoStack {
     if (!this.enabled) throw new Error('UndoStack is disabled as noting given in new UndoStack()');
   }
 }
+exports.$undo = $undo;
 exports.Undo = Undo;
 exports.UndoStack = UndoStack;

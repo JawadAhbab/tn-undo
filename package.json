@@ -1,6 +1,6 @@
 {
   "name": "tn-undo",
-  "version": "1.4.12",
+  "version": "1.4.13",
   "description": " ",
   "keywords": [],
   "main": "dist/index.cjs.js",
