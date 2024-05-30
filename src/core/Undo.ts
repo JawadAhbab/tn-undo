@@ -4,6 +4,7 @@ import { Diff, DiffKind, diff as getDiff, mergeable, redo, undo } from 'tn-diff'
 import { ObjectOf } from 'tn-typescript'
 type UndoStack = { serial: number; diff: Diff }
 type Namespace = { lastvalue: any; serial: number }
+type URRetrun<D extends boolean> = Promise<D extends true ? { change: boolean; value: any } : any>
 interface Task {
   resolve: (value: PromiseLike<any>) => void
   reject: (value: PromiseLike<any>) => void
@@ -87,20 +88,25 @@ export class Undo {
     })
   }
 
-  public undo(namespace: string) {
+  private urr<D extends boolean>(change: boolean, value: any, details?: D): Awaited<URRetrun<D>> {
+    if (!details) return value
+    return { change, value } as Awaited<URRetrun<D>>
+  }
+
+  public undo<D extends boolean = false>(namespace: string, details?: D): URRetrun<D> {
     return this.task(async () => {
       const ns = this.namespaces[namespace]
-      if (!ns) return undefined
+      if (!ns) return this.urr(false, undefined, details)
       const laststack = await this.table(namespace).get(ns.serial as any)
-      if (!laststack) return ns.lastvalue
+      if (!laststack) return this.urr(false, ns.lastvalue, details)
       const undovalue = undo(ns.lastvalue, laststack.diff)
       ns.serial -= 1
       ns.lastvalue = undovalue
-      return undovalue
+      return this.urr(true, undovalue, details)
     })
   }
 
-  public redo(namespace: string) {
+  public redo<D extends boolean = false>(namespace: string, details?: D): URRetrun<D> {
     return this.task(async () => {
       const ns = this.namespaces[namespace]
       if (!ns) return undefined

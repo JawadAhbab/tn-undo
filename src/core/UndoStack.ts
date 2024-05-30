@@ -37,12 +37,14 @@ export class UndoStack<T> {
   public async undo() {
     this.checkenable()
     const prevalue = await $undo.lastvalue(this.ns)
-    this.change(await $undo.undo(this.ns), prevalue, 'undo')
+    const { change, value } = await $undo.undo(this.ns, true)
+    if (change) this.change(value, prevalue, 'undo')
   }
   public async redo() {
     this.checkenable()
     const prevalue = await $undo.lastvalue(this.ns)
-    this.change(await $undo.redo(this.ns), prevalue, 'redo')
+    const { change, value } = await $undo.redo(this.ns, true)
+    if (change) this.change(value, prevalue, 'redo')
   }
   public async serial() {
     this.checkenable()
