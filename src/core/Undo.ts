@@ -109,13 +109,13 @@ export class Undo {
   public redo<D extends boolean = false>(namespace: string, details?: D): URRetrun<D> {
     return this.task(async () => {
       const ns = this.namespaces[namespace]
-      if (!ns) return undefined
+      if (!ns) return this.urr(false, undefined, details)
       const nextstack = await this.table(namespace).get((ns.serial + 1) as any)
-      if (!nextstack) return ns.lastvalue
+      if (!nextstack) return this.urr(false, ns.lastvalue, details)
       const redovalue = redo(ns.lastvalue, nextstack.diff)
       ns.serial += 1
       ns.lastvalue = redovalue
-      return redovalue
+      return this.urr(true, redovalue, details)
     })
   }
 
