@@ -87,28 +87,35 @@ class Undo {
       }
     });
   }
-  undo(namespace) {
+  urr(change, value, details) {
+    if (!details) return value;
+    return {
+      change,
+      value
+    };
+  }
+  undo(namespace, details) {
     return this.task(async () => {
       const ns = this.namespaces[namespace];
-      if (!ns) return undefined;
+      if (!ns) return this.urr(false, undefined, details);
       const laststack = await this.table(namespace).get(ns.serial);
-      if (!laststack) return ns.lastvalue;
+      if (!laststack) return this.urr(false, ns.lastvalue, details);
       const undovalue = tnDiff.undo(ns.lastvalue, laststack.diff);
       ns.serial -= 1;
       ns.lastvalue = undovalue;
-      return undovalue;
+      return this.urr(true, undovalue, details);
     });
   }
-  redo(namespace) {
+  redo(namespace, details) {
     return this.task(async () => {
       const ns = this.namespaces[namespace];
-      if (!ns) return undefined;
+      if (!ns) return this.urr(false, undefined, details);
       const nextstack = await this.table(namespace).get(ns.serial + 1);
-      if (!nextstack) return ns.lastvalue;
+      if (!nextstack) return this.urr(false, ns.lastvalue, details);
       const redovalue = tnDiff.redo(ns.lastvalue, nextstack.diff);
       ns.serial += 1;
       ns.lastvalue = redovalue;
-      return redovalue;
+      return this.urr(true, redovalue, details);
     });
   }
   serial(namespace) {
@@ -149,12 +156,20 @@ class UndoStack {
   async undo() {
     this.checkenable();
     const prevalue = await $undo.lastvalue(this.ns);
-    this.change(await $undo.undo(this.ns), prevalue, 'undo');
+    const {
+      change,
+      value
+    } = await $undo.undo(this.ns, true);
+    if (change) this.change(value, prevalue, 'undo');
   }
   async redo() {
     this.checkenable();
     const prevalue = await $undo.lastvalue(this.ns);
-    this.change(await $undo.redo(this.ns), prevalue, 'redo');
+    const {
+      change,
+      value
+    } = await $undo.redo(this.ns, true);
+    if (change) this.change(value, prevalue, 'redo');
   }
   async serial() {
     this.checkenable();

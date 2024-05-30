@@ -1,3 +1,7 @@
+type URRetrun<D extends boolean> = Promise<D extends true ? {
+    change: boolean;
+    value: any;
+} : any>;
 export declare class Undo {
     private db;
     private version;
@@ -11,8 +15,10 @@ export declare class Undo {
     private createTable;
     private table;
     update(namespace: string, curr: any, maxdistance?: number): Promise<void>;
-    undo(namespace: string): Promise<any>;
-    redo(namespace: string): Promise<any>;
+    private urr;
+    undo<D extends boolean = false>(namespace: string, details?: D): URRetrun<D>;
+    redo<D extends boolean = false>(namespace: string, details?: D): URRetrun<D>;
     serial(namespace: string): Promise<number>;
     lastvalue(namespace: string): Promise<any>;
 }
+export {};
